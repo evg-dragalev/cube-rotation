@@ -1,0 +1,11 @@
+body{
+    margin: 0;
+}
+.wrapper{
+    background-color: #4a4a4a;
+    color: #6e6e6e;
+}
+#canvas{
+    display: block;
+    /*height: 100%;*/
+}
