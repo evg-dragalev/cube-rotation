@@ -197,17 +197,17 @@ function Rotator(X, Y, Z, fiAngle){
     };
 
     this.setRotationVectorX = function(x){
-        rotationVector.x = x;
+        rotationVector.x = +x;
         culcMatrix();
     };
 
     this.setRotationVectorY = function(y){
-        rotationVector.y = y;
+        rotationVector.y = +y;
         culcMatrix();
     };
 
     this.setRotationVectorZ = function(z){
-        rotationVector.z = z;
+        rotationVector.z = +z;
         culcMatrix();
     };
 
