@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <title>Cube</title>
+    <link rel="stylesheet" type="text/css" href="styles/reset.css">
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css">
     <link rel="stylesheet" type="text/css" href="styles/styles.css">
 </head>
 <body onload="onBodyLoad();">
@@ -10,6 +12,72 @@
     <div class="canvas-wrapper">
         <canvas id="canvas"></canvas>
     </div>
+</div>
+<div class="options-panel">
+    <ul>
+        <li class="option-group">
+            <ul class="screen-vect-options">
+                <p class="option-group-title">Screen options</p>
+                <li class="number-option option">
+                    <label for="screenVect-fi">Fi: </label>
+                    <input id="screenVect-fi" type="number" step="0.01" min="0" max="2" value="" onchange="state.setScreenFi(value);"> Pi
+                </li>
+                <li class="number-option option">
+                    <label for="screenVect-ksi">Ksi: </label>
+                    <input id="screenVect-ksi" type="number" step="0.01" min="-0.5" max="0.5" value="" onchange="state.setScreenKsi(value);"> Pi
+                </li>
+                <li class="number-option option">
+                    <label for="screenVect-r">R: </label>
+                    <input id="screenVect-r" type="number" step="0.01" value="" onchange="state.setScreenR(value);">
+                </li>
+            </ul>
+        </li>
+        <li class="option-group">
+            <ul class="rotation-options">
+                <p class="option-group-title">Rotation options</p>
+                <li class="rotation-vect-options option-subgroup">
+                    <p class="option-subgroup-title">Rotation vector: </p>
+                    <div class="number-option option">
+                        <label for="rotationVect-x">X: </label>
+                        <input id="rotationVect-x" type="number" step="5" onchange="state.setRotationVectorX(value);">
+                    </div>
+                    <div class="number-option option">
+                        <label for="rotationVect-y">Y: </label>
+                        <input id="rotationVect-y" type="number" step="5" onchange="state.setRotationVectorY(value);">
+                    </div>
+                    <div class="number-option option">
+                        <label for="rotationVect-z">Z: </label>
+                        <input id="rotationVect-z" type="number" step="5" onchange="state.setRotationVectorZ(value);">
+                    </div>
+                </li>
+                <li class="option-subgroup">
+                    <label class="option-subgroup-title" for="rotation-angle">Rotation angle: </label>
+                    <div class="rotation-angle-option number-option option">
+                        <input id="rotation-angle" type="number" step="0.01" onchange="state.setRotationAngle(value);"> Pi
+                    </div>
+                </li>
+            </ul>
+        </li>
+        <li class="option-group">
+            <ul class="central-proj-options">
+                <p class="option-group-title">Central projection</p>
+                <li class="checkbox-option option">
+                    <label for="isCentral-option">Enable </label>
+                    <input id="isCentral-option" type="checkbox" onchange="state.setIsCentral(checked)">
+                </li>
+            </ul>
+        </li>
+        <li class="option-group">
+            <ul class="other-options">
+                <p class="option-group-title">Other options</p>
+                <li class="color-option option">
+                    <label for="cube-color">Cube color: </label>
+                    <input id="cube-color" type="color" onchange="state.setCubeColor(value);">
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <input class="resetButton" type="button" onclick="state.resetValues()" value="Reset">
 </div>
 </body>
 <script type="text/javascript" src="js/main.js" ></script>

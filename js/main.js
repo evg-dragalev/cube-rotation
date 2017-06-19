@@ -41,9 +41,9 @@ const FI = 1.2*Math.PI;
 const KSI = 0.1*Math.PI;
 const ROTATION_ANGLE = 0.5*Math.PI;
 // const FOCUS = new Point(300, 300, 300);
-const T = 700;
+const T = 2000;
 const FOCUS = new Point(
-    T*R*Math.cos(FI)*Math.cos(KSI),
+    T*Math.cos(FI)*Math.cos(KSI),
     T*Math.sin(KSI),
     T*Math.sin(FI)*Math.cos(KSI)
 );
@@ -109,6 +109,18 @@ function Screen(fiAngle, ksiAngle, length){
     this.setR = function(newr){
         r = newr;
         culcBasis();
+    };
+
+    this.getFi = function(){
+        return fi;
+    };
+
+    this.getKsi = function(){
+        return ksi;
+    };
+
+    this.getR = function(){
+        return r;
     };
 
     this.proj = function(p, focus){
@@ -424,7 +436,40 @@ let state= {
     resetValues: function(){
         this.rotator = new Rotator(ROTATION_VECTOR.x, ROTATION_VECTOR.y, ROTATION_VECTOR.z, ROTATION_ANGLE);
         this.drawer.scr = new Screen(FI, KSI, R);
+        this.isCentral = false;
+        fillOptions();
     },
+    setRotationVectorX: function(x){
+        this.rotator.setRotationVectorX(x);
+    },
+    setRotationVectorY: function(y){
+        this.rotator.setRotationVectorY(y);
+    },
+    setRotationVectorZ: function(z){
+        this.rotator.setRotationVectorZ(z);
+    },
+    setRotationAngle: function(angle){
+        this.rotator.setRotationAngle(angle*Math.PI);
+    },
+    setScreenFi: function(fi){
+        this.drawer.scr.setFi(fi*Math.PI);
+    },
+    setScreenKsi: function(ksi){
+        this.drawer.scr.setKsi(ksi*Math.PI);
+    },
+    setScreenR: function(r){
+        this.drawer.scr.setR(r);
+    },
+    setFocus: function(x, y, z){
+        this.focus = new Point(x, y, z);
+    },
+    setIsCentral: function(value){
+        console.log(value);
+        this.isCentral = value;
+    },
+    setCubeColor: function(color){
+        this.drawer.setCubeColor(color);
+    }
 };
 
 function draw(){
@@ -455,10 +500,23 @@ function draw(){
             setTimeout(drawFrame, 1000 / FPS, cube, state.focus);
         }
     }
-
     drawFrame(CUBE);
 }
 
 function onBodyLoad(){
     draw();
+    fillOptions();
+}
+
+function fillOptions(){
+    document.getElementById("screenVect-fi").value = state.drawer.scr.getFi()/Math.PI;
+    document.getElementById("screenVect-ksi").value = state.drawer.scr.getKsi()/Math.PI;
+    document.getElementById("screenVect-r").value = state.drawer.scr.getR();
+
+    let rotV = state.rotator.getRotationVector();
+    document.getElementById("rotationVect-x").value = rotV.x;
+    document.getElementById("rotationVect-y").value = rotV.y;
+    document.getElementById("rotationVect-z").value = rotV.z;
+    document.getElementById("rotation-angle").value = state.rotator.getRotationAngle()/Math.PI;
+    document.getElementById("isCentral-option").checked = state.rotator.isCentral;
 }
