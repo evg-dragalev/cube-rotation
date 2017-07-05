@@ -21,14 +21,6 @@ class Point{
             this.z/mod
         );
     }
-
-    move(x ,y, z){
-        return new Point(
-            this.x + x,
-            this.y + y,
-            this.z + z
-        )
-    }
 }
 
 //initial values
@@ -43,9 +35,9 @@ const ROTATION_ANGLE = 0.5*Math.PI;
 // const FOCUS = new Point(300, 300, 300);
 const T = 2000;
 const FOCUS = new Point(
-    T*Math.cos(FI)*Math.cos(KSI),
-    T*Math.sin(KSI),
-    T*Math.sin(FI)*Math.cos(KSI)
+    (R+T)*Math.cos(FI)*Math.cos(KSI),
+    (R+T)*Math.sin(KSI),
+    (R+T)*Math.sin(FI)*Math.cos(KSI)
 );
 
 const CUBE = [
@@ -76,9 +68,9 @@ function Screen(fiAngle, ksiAngle, length){
         let cosKsi = Math.cos(ksi);
 
         vJ = new Point(
-            -r*cosFi*sinKsi,
-            -r*cosKsi,
-            -r*sinFi*sinKsi
+            r*cosFi*sinKsi,
+            r*cosKsi,
+            r*sinFi*sinKsi
         );
         vI = new Point(
             -r*sinFi,
@@ -90,7 +82,7 @@ function Screen(fiAngle, ksiAngle, length){
             -r*sinKsi,
             -r*sinFi*cosKsi
         );
-    };
+    }
 
     this.setFi = function(angle){
         if(angle>=0 && angle<=2*Math.PI) {
@@ -258,20 +250,28 @@ function Drawer(context, screen, canvasWidth, canvasHeight){
 
     this.scr = screen;
 
+    function adaptPoint(point){
+        return new Point(
+            point.x + xM,
+            point.y + yM,
+            point.z
+        );
+    }
+
     this.setCubeColor = function(color){
         cubeColor = color;
     };
 
     this.drawCube = function(cube, focus){
         let cPrj = [
-            this.scr.proj(cube[0], focus).move(xM, yM, 0),
-            this.scr.proj(cube[1], focus).move(xM, yM, 0),
-            this.scr.proj(cube[2], focus).move(xM, yM, 0),
-            this.scr.proj(cube[3], focus).move(xM, yM, 0),
-            this.scr.proj(cube[4], focus).move(xM, yM, 0),
-            this.scr.proj(cube[5], focus).move(xM, yM, 0),
-            this.scr.proj(cube[6], focus).move(xM, yM, 0),
-            this.scr.proj(cube[7], focus).move(xM, yM, 0)
+            adaptPoint( this.scr.proj(cube[0], focus) ),
+            adaptPoint( this.scr.proj(cube[1], focus) ),
+            adaptPoint( this.scr.proj(cube[2], focus) ),
+            adaptPoint( this.scr.proj(cube[3], focus) ),
+            adaptPoint( this.scr.proj(cube[4], focus) ),
+            adaptPoint( this.scr.proj(cube[5], focus) ),
+            adaptPoint( this.scr.proj(cube[6], focus) ),
+            adaptPoint( this.scr.proj(cube[7], focus) )
         ];
 
         ctx.beginPath();
@@ -340,8 +340,8 @@ function Drawer(context, screen, canvasWidth, canvasHeight){
     };
 
     this.drawRotationVector = function(rotVect, focus){
-        let rotVectProj = self.scr.proj(rotVect, focus).move(xM, yM, 0);
-        let Op = self.scr.proj(new Point (0,0,0), focus).move(xM, yM, 0);
+        let rotVectProj = adaptPoint( self.scr.proj(rotVect, focus) );
+        let Op = adaptPoint( self.scr.proj(new Point (0,0,0), focus) );
 
         ctx.beginPath();
         ctx.moveTo(Op.x, Op.y);
@@ -357,13 +357,13 @@ function Drawer(context, screen, canvasWidth, canvasHeight){
         let lineXZ, lineZX;
         for(let i = -6; i <= 6; i++){
             lineXZ = [
-                self.scr.proj(new Point(-2*t2, 0, 50*i), focus).move(xM, yM, 0),
-                self.scr.proj(new Point(2*t2, 0, 50*i), focus).move(xM, yM, 0)
+                adaptPoint( self.scr.proj(new Point(-2*t2, 0, 50*i), focus) ),
+                adaptPoint( self.scr.proj(new Point(2*t2, 0, 50*i), focus) )
             ];
 
             lineZX = [
-                self.scr.proj(new Point(50*i, 0, -2*t2), focus).move(xM, yM, 0),
-                self.scr.proj(new Point(50*i, 0, 2*t2), focus).move(xM, yM, 0)
+                adaptPoint( self.scr.proj(new Point(50*i, 0, -2*t2), focus) ),
+                adaptPoint( self.scr.proj(new Point(50*i, 0, 2*t2), focus) )
             ];
 
             ctx.beginPath();
@@ -379,16 +379,16 @@ function Drawer(context, screen, canvasWidth, canvasHeight){
 
     this.drawAxis = function(focus) {
         let OX = [
-            self.scr.proj(new Point(t1, 0, 0), focus).move(xM, yM, 0),
-            self.scr.proj(new Point(t2, 0, 0), focus).move(xM, yM, 0)
+            adaptPoint( self.scr.proj(new Point(t1, 0, 0), focus) ),
+            adaptPoint( self.scr.proj(new Point(t2, 0, 0), focus) )
         ];
         let OY = [
-            self.scr.proj(new Point(0, t1, 0), focus).move(xM, yM, 0),
-            self.scr.proj(new Point(0, t2, 0), focus).move(xM, yM, 0)
+            adaptPoint( self.scr.proj(new Point(0, t1, 0), focus) ),
+            adaptPoint( self.scr.proj(new Point(0, t2, 0), focus) )
         ];
         let OZ = [
-            self.scr.proj(new Point(0, 0, t1), focus).move(xM, yM, 0),
-            self.scr.proj(new Point(0, 0, t2), focus).move(xM, yM, 0)
+            adaptPoint( self.scr.proj(new Point(0, 0, t1), focus) ),
+            adaptPoint( self.scr.proj(new Point(0, 0, t2), focus) )
         ];
 
         ctx.beginPath();
@@ -418,7 +418,8 @@ function Drawer(context, screen, canvasWidth, canvasHeight){
     }
 }
 
-let state= {
+let state = {
+    cube: CUBE,
     drawer: null,
     rotator: null,
     focus: null,
@@ -434,6 +435,7 @@ let state= {
         this.focus = FOCUS;
     },
     resetValues: function(){
+        this.cube = CUBE;
         this.rotator = new Rotator(ROTATION_VECTOR.x, ROTATION_VECTOR.y, ROTATION_VECTOR.z, ROTATION_ANGLE);
         this.drawer.scr = new Screen(FI, KSI, R);
         this.isCentral = false;
@@ -441,12 +443,15 @@ let state= {
     },
     setRotationVectorX: function(x){
         this.rotator.setRotationVectorX(x);
+        this.cube = CUBE;
     },
     setRotationVectorY: function(y){
         this.rotator.setRotationVectorY(y);
+        this.cube = CUBE;
     },
     setRotationVectorZ: function(z){
         this.rotator.setRotationVectorZ(z);
+        this.cube = CUBE;
     },
     setRotationAngle: function(angle){
         this.rotator.setRotationAngle(angle*Math.PI);
@@ -483,24 +488,24 @@ function draw(){
 
     state.initValues(ctx, canvas.width, canvas.height);
 
-    function drawFrame(cube, focus){
+    function drawFrame(focus){
         state.drawer.clear();
         state.drawer.drawBasePlane(focus);
         state.drawer.drawAxis(focus);
         state.drawer.drawRotationVector(state.rotator.getRotationVector(), focus);
-        state.drawer.drawCube(cube, focus);
+        state.drawer.drawCube(state.cube, focus);
 
-        cube.forEach((point, index) => {
-            cube[index] = state.rotator.rotate(point);
+        state.cube.forEach((point, index) => {
+            state.cube[index] = state.rotator.rotate(point);
         });
 
         if(state.isCentral === false) {
-            setTimeout(drawFrame, 1000 / FPS, cube);
+            setTimeout(drawFrame, 1000 / FPS);
         } else {
-            setTimeout(drawFrame, 1000 / FPS, cube, state.focus);
+            setTimeout(drawFrame, 1000 / FPS, state.focus);
         }
     }
-    drawFrame(CUBE);
+    drawFrame();
 }
 
 function onBodyLoad(){
